@@ -1,3 +1,5 @@
 # nlangp
 
-[Hidden Markov Models](https://github.com/yatjing/nlangp/tree/master/hmm)
+[Hidden Markov Models for Gene Names](https://github.com/yatbear/nlangp/tree/master/hmm)
+
+[Baum-Welch Algorithm for English Letters](https://github.com/yatbear/nlangp/tree/master/Baum-Welch)
