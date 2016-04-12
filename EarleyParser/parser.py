@@ -28,7 +28,7 @@ class Rule(object):
         self.rhs = rhs
         self.weight = -math.log(float(prob)) / math.log(2.0) # to prevent underflow
         
-class Entry:
+class Entry(object):
     '''
     Parsing chart entry
     '''
@@ -281,7 +281,7 @@ class EarleyParser(object):
             i += 1 # keep track of current column index
             if done:
                 break
-        # Parsing trees do not exist.
+        # If parsing trees do not exist
         if not done:
             print 'None'
     
