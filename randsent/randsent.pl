@@ -16,7 +16,7 @@ no warnings "recursion";
 
 my $filename = $ARGV[0] eq "-t" ? $ARGV[1] : $ARGV[0];
 my $numSen = $ARGV[0] eq "-t" ? $ARGV[2] : $ARGV[1];
-my %grammar;    # hashtable
+my %grammar; # hashtable
 
 # Read grammar file
 open(my $file, "<:encoding(UTF-8)", $filename) || die "The grammar file cannot be opened! \n";
