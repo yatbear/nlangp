@@ -7,7 +7,6 @@ __date__ = "$Dec 21, 2015"
 def remap():
     # Read original training data
     trainset = [line.strip().split() for line in open('gene.train', 'r').readlines()]
-
     rare_candidates = dict()
     for sample in trainset:
         if len(sample) == 0:
@@ -39,7 +38,6 @@ def remap():
     with open('gene1.train', 'w') as f:
         for line in new_trainset:
             f.write(line)
-
 
 if __name__ == "__main__":
     remap()

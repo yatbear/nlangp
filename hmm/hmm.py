@@ -14,23 +14,19 @@ def collect_counts(counts):
 
     for line in counts:
         count, lbl = float(line[0]), line[1]
-        
         # Collect emission counts 
         if lbl == 'WORDTAG':
             tag, word = line[2], line[3]
             key = word + '|' + tag
             ecounts[key] = count
-       
         # Collect unigram counts
         elif lbl == '1-GRAM':
             tag = line[2]
             unicounts[tag] = count
-        
         # Collect bigram counts
         elif lbl == '2-GRAM':
             key = line[2] + ',' + line[3]
             bicounts[key] = count
-        
         # Collect trigram counts
         elif lbl == '3-GRAM':
             key = line[2] + ',' + line[3] + ',' + line[4]
@@ -55,10 +51,8 @@ def simple_tagger(devset, ecounts, unicounts):
         for tag in tags:
             key = word + '|' + tag
             ecount = ecounts[key] if key in ecounts.keys() else 0.0
-
             # e(word|tag) = Count(tag->word) / Count(tag)
             eprob = ecount / unicounts[tag] 
-           
             if eprob > maxp:
                 best_tag, maxp = tag, eprob
 
@@ -114,26 +108,22 @@ def viterbi_tagger(devset, ecounts, unicounts, bicounts, tricounts):
                 for v in tags:
                     key = str(k) + ',' + u + ',' + v
                     pi[key] = compute_pi(k, x, w, u, v)
-
             elif k == 2:
                 w = '*'
                 for u in tags:
                     for v in tags:
                         key = str(k) + ',' + u + ',' + v
                         pi[key] = compute_pi(k, x, w, u, v)
-            
             else:
                 for u in tags:
                     for v in tags:
                         best_w, maxlp = None, -float('inf')
-                       
                         # Choose w to maximize pi 
                         for w in tags:
                             pi_lp = compute_pi(k, x, w, u, v)
                             if pi_lp > maxlp:
                                 maxlp = pi_lp
-                                best_w = w
-                                
+                                best_w = w   
                         key = str(k) + ',' + u + ',' + v
                         pi[key] = maxlp
                         bp[key] = best_w
@@ -145,12 +135,10 @@ def viterbi_tagger(devset, ecounts, unicounts, bicounts, tricounts):
         for u in tags:
             for v in tags:
                 key = str(n) + ',' + u + ',' + v    
-                pi_lp = pi[key] #if key in pi.keys() else -float('inf')
-
+                pi_lp = pi[key] # if key in pi.keys() else -float('inf')
                 trikey = u + ',' + v + ',STOP'
                 bikey = v + ',STOP' 
                 qprob = tricounts[trikey] / bicounts[bikey] 
-
                 lp = pi_lp + log(qprob)
                 if lp > maxlp:
                     maxlp = lp 
@@ -182,15 +170,12 @@ def main():
     # Collect counts
     counts = [line.strip().split() for line in open('gene.counts', 'r').readlines()]
     ecounts, unicounts, bicounts, tricounts = collect_counts(counts)
-
     # Unigram Tagger
     devset = [line.strip().split() for line in open('gene.dev', 'r').readlines()]
     simple_tagger(devset, ecounts, unicounts)
-
     # Viterbi Tagger
     devset = open('gene.dev', 'r').read().split('\n\n') # read sequences
     viterbi_tagger(devset, ecounts, unicounts, bicounts, tricounts)
-
 
 if __name__ == "__main__":
     main()
